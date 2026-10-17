@@ -24,49 +24,12 @@
     grid: byId('grid'), scroll: byId('gridScroll'), menu: byId('menuPanel'), menuButton: byId('menuButton'),
     hint: byId('activeHint'), hintArrow: byId('hintArrow'), hintDirection: byId('hintDirection'), hintCopy: byId('hintCopy'),
     solution: byId('solutionGrid'), zoom: byId('zoomValue'), zoomOut: byId('zoomOut'), zoomIn: byId('zoomIn'),
-    status: byId('statusMessage'), complete: byId('completeMark'), scrollTip: byId('scrollTip')
+    status: byId('statusMessage'), scrollTip: byId('scrollTip')
   };
 
   let game = null;
   let zoomStep = 0;
   let pointerWasActive = false;
-  const TIMER_PREFIX = 'schwedenraetsel:v2:timer:';
-  let elapsedSeconds = 0;
-  let timerRunning = false;
-  let timerInterval = null;
-
-  function showTimer() {
-    const button = byId('timerButton');
-    const label = byId('timerText');
-    if (!button || !label) return;
-    const time = Math.floor(elapsedSeconds / 60) + ':' + String(elapsedSeconds % 60).padStart(2, '0');
-    label.textContent = timerRunning || elapsedSeconds ? time : 'Timer starten';
-    button.classList.toggle('timer-start', !timerRunning && !elapsedSeconds);
-    button.setAttribute('aria-pressed', String(timerRunning));
-    button.setAttribute('aria-label', timerRunning ? 'Timer pausieren' : 'Timer starten oder fortsetzen');
-  }
-
-  function stopTimer() {
-    if (!timerRunning) return;
-    timerRunning = false;
-    clearInterval(timerInterval);
-    timerInterval = null;
-    if (game) save(TIMER_PREFIX + game.model.puzzle.id, elapsedSeconds);
-    showTimer();
-  }
-
-  function toggleTimer() {
-    if (!game || completed()) return;
-    if (timerRunning) { stopTimer(); return; }
-    timerRunning = true;
-    timerInterval = setInterval(() => {
-      elapsedSeconds++;
-      save(TIMER_PREFIX + game.model.puzzle.id, elapsedSeconds);
-      showTimer();
-    }, 1000);
-    showTimer();
-  }
-
   const posKey = (row, col) => `${row}:${col}`;
   const sanitize = (text) => String(text || '')
     .toLocaleUpperCase('de-DE').replace(/Ä/g, 'AE').replace(/Ö/g, 'OE')
@@ -153,7 +116,6 @@
   }
 
   function setPuzzle(puzzle) {
-    stopTimer();
     const level = puzzle.level;
     currentByLevel[level] = puzzle.id;
     save(CURRENT_KEY, currentByLevel);
@@ -168,11 +130,7 @@
     const revealed = new Set(Array.isArray(stored.revealed) ? stored.revealed.filter((key) => model.cells.has(key)) : []);
     game = { model, letters, revealed, wrong: new Set(), nodes: new Map(), clueNodes: new Map(), activeKey: null, activeId: null };
     save(LAST_LEVEL, level);
-    elapsedSeconds = Math.max(0, Math.floor(Number(load(TIMER_PREFIX + puzzle.id, 0)) || 0));
-    showTimer();
     zoomStep = 0;
-    ui.complete.textContent = 'VIEL FREUDE BEIM RÄTSELN';
-    ui.complete.classList.remove('solved');
     ui.hintArrow.textContent = '→';
     ui.hintDirection.textContent = 'HINWEIS';
     ui.hintCopy.textContent = 'Ein Hinweisfeld oder ein weißes Kästchen antippen.';
@@ -437,11 +395,7 @@
     refreshSelection();
     refreshSolution();
     if (completed()) markComplete();
-    else {
-      ui.complete.textContent = 'VIEL FREUDE BEIM RÄTSELN';
-      ui.complete.classList.remove('solved');
-      if (ui.status.classList.contains('success')) showStatus('');
-    }
+    else if (ui.status.classList.contains('success')) showStatus('');
   }
 
   function completed() {
@@ -452,9 +406,6 @@
     return true;
   }
   function markComplete() {
-    stopTimer();
-    ui.complete.textContent = 'RÄTSEL GELÖST ✓';
-    ui.complete.classList.add('solved');
     showStatus('Geschafft! Alle Begriffe und das Lösungswort sind richtig.', 'success');
   }
   function resizeCells() {
@@ -574,7 +525,6 @@
       focusCell(game.activeKey);
     }
   });
-  byId('timerButton').addEventListener('click', toggleTimer);
   byId('newGameButton').addEventListener('click', startNewGame);
 
   function showMenu(open) {
@@ -629,8 +579,6 @@
     showMenu(false);
     if (!game || !window.confirm('Dieses Rätsel wirklich leeren? Der bisherige Spielstand geht verloren.')) return;
     const puzzle = game.model.puzzle;
-    stopTimer();
-    clear(TIMER_PREFIX + puzzle.id);
     clear(STORAGE_PREFIX + puzzle.id);
     setPuzzle(puzzle);
     showStatus('Dieses Rätsel wurde zurückgesetzt.');

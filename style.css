@@ -48,15 +48,6 @@ h1 { font-size: clamp(30px, 4.2vw, 41px); font-weight: 760; line-height: 1.13; l
 .level[aria-pressed="true"] { background: #fff; color: #18243c; box-shadow: 0 1px 4px #10203815; }
 .level:not([aria-pressed="true"]):active { background: #dfe4ed; }
 .game { min-width: 0; }
-.game-info { min-height: 27px; margin-bottom: 13px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
-.game-label { display: flex; align-items: center; gap: 10px; color: #8995a7; font-size: 10px; font-weight: 770; letter-spacing: .085em; }
-#issueIndicator { color: #546681; }
-#filledCount { font-variant-numeric: tabular-nums; }
-.tiny-dot { flex: none; width: 4px; height: 4px; border-radius: 50%; background: #b4c0ce; }
-.timer-button { display: flex; align-items: center; justify-content: flex-end; gap: 7px; border: 0; background: transparent; color: #65748c; font-size: 12px; font-weight: 720; padding: 3px 0 3px 8px; min-height: 28px; white-space: nowrap; font-variant-numeric: tabular-nums; }
-.timer-button svg { width: 16px; height: 16px; }
-.timer-button.timer-start { color: #8995a7; font-weight: 620; }
-.timer-button[aria-pressed="true"] { color: var(--accent); }
 
 .active-hint { display: grid; grid-template-columns: 33px minmax(0, 1fr) 36px; align-items: center; min-height: 66px; padding: 9px 9px 9px 13px; margin-bottom: 14px; border-radius: 15px; background: #edf2fa; }
 .hint-arrow { color: var(--accent); font-size: 26px; font-weight: 400; line-height: 1; }
@@ -78,7 +69,7 @@ h1 { font-size: clamp(30px, 4.2vw, 41px); font-weight: 760; line-height: 1.13; l
 .tile.letter.wrong { background: #fff0f0; }
 .tile.letter.active.wrong { background: #ffdddd; box-shadow: inset 0 0 0 2px #ed8894; }
 .tile.letter.given::after { content: ""; position: absolute; right: 3px; bottom: 3px; width: 4px; height: 4px; border-radius: 50%; background: #358a7b; pointer-events: none; }
-.letter-input { width: 100%; height: 100%; display: block; padding: 7px 0 0; text-align: center; border: 0; border-radius: 0; outline: 0 !important; background: transparent; color: #2675eb; text-transform: uppercase; caret-color: var(--accent); -webkit-appearance: none; font-size: 21px; font-weight: 610; line-height: 1; }
+.letter-input { width: 100%; height: 100%; display: block; padding: 7px 0 0; text-align: center; border: 0; border-radius: 0; outline: 0 !important; background: transparent; color: #111111; text-transform: uppercase; caret-color: var(--accent); -webkit-appearance: none; font-size: 21px; font-weight: 610; line-height: 1; }
 .letter-input::selection { background: #d7e7ff; }
 .solution-index { position: absolute; z-index: 1; top: 2px; left: 2px; font-size: 8px; font-weight: 700; line-height: 1; color: #647893; pointer-events: none; }
 .tile.clue { background: #e9edf5; }
@@ -114,17 +105,15 @@ h1 { font-size: clamp(30px, 4.2vw, 41px); font-weight: 760; line-height: 1.13; l
 .solution-heading span { font-size: 11px; color: #9ba6b7; text-align: right; }
 .solution-scroll { width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: thin; }
 .solution-grid { display: flex; gap: 5px; width: max-content; padding: 2px; }
-.solution-tile { flex: none; width: 44px; height: 53px; padding: 4px; display: grid; grid-template-rows: 13px 1fr; text-align: center; align-items: center; border: 1px solid #d8e0ed; border-radius: 10px; background: #fff; color: var(--accent); }
+.solution-tile { flex: none; width: 44px; height: 53px; padding: 4px; display: grid; grid-template-rows: 13px 1fr; text-align: center; align-items: center; border: 1px solid #d8e0ed; border-radius: 10px; background: #fff; color: #111111; }
 .solution-tile span { align-self: start; text-align: left; color: #a1abbb; font-size: 9px; line-height: 1; }
-.solution-tile strong { font-size: 22px; line-height: 1; font-weight: 650; }
+.solution-tile strong { color: #111111; font-size: 22px; line-height: 1; font-weight: 650; }
 .solution-tile:active { background: var(--accent-soft); }
 
 .game-bottom { margin-top: 16px; padding: 0 0 4px; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 5px; }
 .status-message { min-height: 16px; margin: 0; font-size: 11px; line-height: 1.45; color: #8995a7; }
 .status-message.error { color: #df5964; }
 .status-message.success { color: #3e9c89; font-weight: 690; }
-.completion-note { margin: 0; min-height: 15px; font-size: 10px; font-weight: 670; letter-spacing: .01em; color: #a1aab8; }
-.completion-note.solved { color: #3e9c89; }
 .brand-signature, .brand-signature:link, .brand-signature:visited, .brand-signature:hover, .brand-signature:active { margin-top: 7px; color: #a1aab8; text-decoration: none; font-size: 10px; font-weight: 420; line-height: 1.4; letter-spacing: .055em; white-space: nowrap; }
 .brand-signature strong { font-weight: 800; }
 
@@ -145,9 +134,6 @@ h1 { font-size: clamp(30px, 4.2vw, 41px); font-weight: 760; line-height: 1.13; l
   .new-button svg { width: 16px; height: 16px; }
   .menu-button { width: 37px; height: 37px; }
   .levels { height: 42px; margin-bottom: 16px; }
-  .game-info { margin-bottom: 11px; }
-  .game-label { font-size: 9px; gap: 7px; }
-  .timer-button { font-size: 11px; }
   .active-hint { min-height: 65px; padding: 8px 7px 8px 11px; margin-bottom: 11px; grid-template-columns: 31px minmax(0,1fr) 32px; border-radius: 13px; }
   .hint-arrow { font-size: 23px; }
   .hint-text strong { font-size: 12px; }
@@ -169,7 +155,6 @@ h1 { font-size: clamp(30px, 4.2vw, 41px); font-weight: 760; line-height: 1.13; l
   h1 { font-size: 21px; }
   .new-button { padding: 7px 8px; }
   .menu-button { width: 33px; height: 36px; }
-  .timer-button { font-size: 10px; }
 }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition-duration: .01ms !important; animation-duration: .01ms !important; }

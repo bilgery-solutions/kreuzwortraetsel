@@ -10,11 +10,11 @@
   <meta name="description" content="Kreuzworträtsel im modernen Design. Immer neue Rätsel, drei Schwierigkeitsgrade und automatische Speicherung.">
   <title>Kreuzworträtsel</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css?v=20261017-fix2">
+  <link rel="stylesheet" href="./style.css?v=20261017-black-letters">
   <script src="./raetsel.js?v=20261017-fix2" defer></script>
   <script src="./wordbank.js?v=20261017-fix2" defer></script>
   <script src="./generator.js?v=20261017-fix2" defer></script>
-  <script src="./main.js?v=20261017-fix2" defer></script>
+  <script src="./main.js?v=20261017-black-letters" defer></script>
 </head>
 <body>
   <main class="shell">
@@ -44,14 +44,7 @@
       <button class="level" type="button" data-level="schwer" aria-pressed="false">Schwer</button>
     </nav>
 
-    <section class="game" aria-label="Kreuzworträtsel spielen">
-      <div class="game-info">
-        <button class="timer-button timer-start" type="button" id="timerButton" aria-label="Timer starten" aria-pressed="false">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="timerText">Timer starten</span>
-        </button>
-      </div>
-
-      <div class="active-hint" id="activeHint" aria-live="polite" aria-atomic="true">
+    <section class="game" aria-label="Kreuzworträtsel spielen">      <div class="active-hint" id="activeHint" aria-live="polite" aria-atomic="true">
         <div class="hint-arrow" id="hintArrow" aria-hidden="true">→</div>
         <div class="hint-text">
           <small id="hintDirection">HINWEIS</small>
@@ -101,7 +94,6 @@
 
       <div class="game-bottom">
         <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
-        <p class="completion-note" id="completeMark">Viel Freude beim Rätseln</p>
         <a class="brand-signature" href="https://bilgery-solutions.de" target="_blank" rel="noopener noreferrer" aria-label="Bilgery Solutions Website öffnen"><strong>BILGERY</strong> <span>SOLUTIONS</span></a>
       </div>
     </section>
