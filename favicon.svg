@@ -1,12 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect width="64" height="64" fill="#fffef9"/>
-  <path d="M2 2h60v60H2z" fill="none" stroke="#252924" stroke-width="3"/>
-  <path d="M22 2v60M42 2v60M2 22h60M2 42h60" fill="none" stroke="#252924" stroke-width="2"/>
-  <path d="M2 2h20v20H2zM42 22h20v20H42zM22 42h20v20H22z" fill="#e3e5df"/>
-  <text x="6" y="14" fill="#252924" font-size="8" font-family="Arial">Tier</text>
-  <text x="18" y="20" fill="#252924" font-size="12" font-family="Arial">→</text>
-  <path d="M28 14h8m-4-4 4 4-4 4" stroke="#252924" stroke-width="2" fill="none"/>
-  <text x="7" y="37" fill="#252924" font-family="Arial" font-size="12">W</text>
-  <text x="27" y="37" fill="#252924" font-family="Arial" font-size="12">O</text>
-  <text x="47" y="57" fill="#252924" font-family="Arial" font-size="12">T</text>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><rect width="64" height="64" rx="14" fill="#f8f9fc"/><rect x="6" y="6" width="52" height="52" rx="5" fill="#fff" stroke="#34455e" stroke-width="2.6"/><path d="M23.5 7v50M40.5 7v50M7 23.5h50M7 40.5h50" fill="none" stroke="#d8dfea" stroke-width="2"/><rect x="24.5" y="24.5" width="15" height="15" rx="2" fill="#dceaff"/><path d="M28 32h8m-3-4 4 4-4 4" fill="none" stroke="#2675eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M44 13h10M10 48h10" stroke="#2675eb" stroke-width="4" stroke-linecap="round"/></svg>

@@ -31,6 +31,42 @@
   let game = null;
   let zoomStep = 0;
   let pointerWasActive = false;
+  const TIMER_PREFIX = 'schwedenraetsel:v2:timer:';
+  let elapsedSeconds = 0;
+  let timerRunning = false;
+  let timerInterval = null;
+
+  function showTimer() {
+    const button = byId('timerButton');
+    const label = byId('timerText');
+    if (!button || !label) return;
+    const time = Math.floor(elapsedSeconds / 60) + ':' + String(elapsedSeconds % 60).padStart(2, '0');
+    label.textContent = timerRunning || elapsedSeconds ? time : 'Timer starten';
+    button.classList.toggle('timer-start', !timerRunning && !elapsedSeconds);
+    button.setAttribute('aria-pressed', String(timerRunning));
+    button.setAttribute('aria-label', timerRunning ? 'Timer pausieren' : 'Timer starten oder fortsetzen');
+  }
+
+  function stopTimer() {
+    if (!timerRunning) return;
+    timerRunning = false;
+    clearInterval(timerInterval);
+    timerInterval = null;
+    if (game) save(TIMER_PREFIX + game.model.puzzle.id, elapsedSeconds);
+    showTimer();
+  }
+
+  function toggleTimer() {
+    if (!game || completed()) return;
+    if (timerRunning) { stopTimer(); return; }
+    timerRunning = true;
+    timerInterval = setInterval(() => {
+      elapsedSeconds++;
+      save(TIMER_PREFIX + game.model.puzzle.id, elapsedSeconds);
+      showTimer();
+    }, 1000);
+    showTimer();
+  }
 
   const posKey = (row, col) => `${row}:${col}`;
   const sanitize = (text) => String(text || '')
@@ -118,6 +154,7 @@
   }
 
   function setPuzzle(puzzle) {
+    stopTimer();
     const level = puzzle.level;
     currentByLevel[level] = puzzle.id;
     save(CURRENT_KEY, currentByLevel);
@@ -132,6 +169,8 @@
     const revealed = new Set(Array.isArray(stored.revealed) ? stored.revealed.filter((key) => model.cells.has(key)) : []);
     game = { model, letters, revealed, wrong: new Set(), nodes: new Map(), clueNodes: new Map(), activeKey: null, activeId: null };
     save(LAST_LEVEL, level);
+    elapsedSeconds = Math.max(0, Math.floor(Number(load(TIMER_PREFIX + puzzle.id, 0)) || 0));
+    showTimer();
     zoomStep = 0;
     ui.title.textContent = puzzle.title;
     ui.number.textContent = puzzle.number;
@@ -347,6 +386,8 @@
     const target = node.square.getBoundingClientRect();
     if (target.left < view.left + 6) ui.scroll.scrollLeft -= view.left + 10 - target.left;
     if (target.right > view.right - 6) ui.scroll.scrollLeft += target.right - view.right + 10;
+    if (target.top < view.top + 6) ui.scroll.scrollTop -= view.top + 10 - target.top;
+    if (target.bottom > view.bottom - 6) ui.scroll.scrollTop += target.bottom - view.bottom + 10;
   }
 
   function activateEntry(id, optionalKey, focus) {
@@ -417,6 +458,7 @@
     return true;
   }
   function markComplete() {
+    stopTimer();
     ui.complete.textContent = 'RÄTSEL GELÖST ✓';
     ui.complete.classList.add('solved');
     showStatus('Geschafft! Alle Begriffe und das Lösungswort sind richtig.', 'success');
@@ -533,6 +575,18 @@
     if (tile && game) selectKey(tile.dataset.key, false, true);
   });
   byId('nextWord').addEventListener('click', nextEntry);
+  byId('eraseButton').addEventListener('click', () => {
+    if (!game) return;
+    if (game.activeKey === null) {
+      const first = game.model.entries[0];
+      if (first) activateEntry(first.id, first.keys[0], false);
+    }
+    if (game.activeKey !== null) {
+      setLetter(game.activeKey, '');
+      focusCell(game.activeKey);
+    }
+  });
+  byId('timerButton').addEventListener('click', toggleTimer);
   byId('newGameButton').addEventListener('click', startNewGame);
 
   function showMenu(open) {
@@ -587,6 +641,8 @@
     showMenu(false);
     if (!game || !window.confirm('Dieses Rätsel wirklich leeren? Der bisherige Spielstand geht verloren.')) return;
     const puzzle = game.model.puzzle;
+    stopTimer();
+    clear(TIMER_PREFIX + puzzle.id);
     clear(STORAGE_PREFIX + puzzle.id);
     setPuzzle(puzzle);
     showStatus('Dieses Rätsel wurde zurückgesetzt.');
