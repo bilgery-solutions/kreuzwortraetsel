@@ -48,7 +48,7 @@ h1 { font-size: clamp(30px, 4.2vw, 41px); font-weight: 760; line-height: 1.13; l
 .level[aria-pressed="true"] { background: #fff; color: #18243c; box-shadow: 0 1px 4px #10203815; }
 .level:not([aria-pressed="true"]):active { background: #dfe4ed; }
 .game { min-width: 0; }
-.game-info { min-height: 27px; margin-bottom: 13px; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.game-info { min-height: 27px; margin-bottom: 13px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
 .game-label { display: flex; align-items: center; gap: 10px; color: #8995a7; font-size: 10px; font-weight: 770; letter-spacing: .085em; }
 #issueIndicator { color: #546681; }
 #filledCount { font-variant-numeric: tabular-nums; }
