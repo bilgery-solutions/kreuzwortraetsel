@@ -6,22 +6,22 @@
   <meta name="theme-color" content="#f8f9fc">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Schwedenrätsel">
-  <meta name="description" content="Schwedenrätsel in einem klaren, modernen Design. Mit unendlich vielen Rätseln, drei Schwierigkeitsgraden und automatischer Speicherung.">
-  <title>Schwedenrätsel</title>
+  <meta name="apple-mobile-web-app-title" content="Kreuzworträtsel">
+  <meta name="description" content="Kreuzworträtsel im modernen Design. Immer neue Rätsel, drei Schwierigkeitsgrade und automatische Speicherung.">
+  <title>Kreuzworträtsel</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="./style.css">
-  <script src="./raetsel.js" defer></script>
-  <script src="./wordbank.js" defer></script>
-  <script src="./generator.js" defer></script>
-  <script src="./main.js" defer></script>
+  <link rel="stylesheet" href="./style.css?v=20261017-fix2">
+  <script src="./raetsel.js?v=20261017-fix2" defer></script>
+  <script src="./wordbank.js?v=20261017-fix2" defer></script>
+  <script src="./generator.js?v=20261017-fix2" defer></script>
+  <script src="./main.js?v=20261017-fix2" defer></script>
 </head>
 <body>
   <main class="shell">
     <header class="masthead">
-      <h1>Schwedenrätsel<span class="brand-period" aria-hidden="true">.</span></h1>
+      <h1>Kreuzworträtsel<span class="brand-period" aria-hidden="true">.</span></h1>
       <div class="header-actions">
-        <button class="new-button" type="button" id="newGameButton" aria-label="Neues Schwedenrätsel starten">
+        <button class="new-button" type="button" id="newGameButton" aria-label="Neues Kreuzworträtsel starten">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg><span>Neu</span>
         </button>
         <button class="menu-button" type="button" id="menuButton" aria-expanded="false" aria-controls="menuPanel" aria-label="Weitere Optionen">
@@ -44,7 +44,7 @@
       <button class="level" type="button" data-level="schwer" aria-pressed="false">Schwer</button>
     </nav>
 
-    <section class="game" aria-label="Schwedenrätsel spielen">
+    <section class="game" aria-label="Kreuzworträtsel spielen">
       <div class="game-info">
         <button class="timer-button timer-start" type="button" id="timerButton" aria-label="Timer starten" aria-pressed="false">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span id="timerText">Timer starten</span>
