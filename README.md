@@ -28,17 +28,17 @@ Eine kleine, vollständig clientseitige Kreuzworträtsel-Webapp auf Deutsch. Kla
 
 | Datei | Zweck |
 |---|---|
-| \`index.html\` | Struktur und Benutzeroberfläche |
-| \`styles.css\` | Layout für Smartphone, Tablet und Desktop |
-| \`app.js\` | Spiellogik, Eingabe, Navigation, Speicherung |
-| \`puzzles.js\` | Rätseldaten – ohne Änderung der Spiellogik erweiterbar |
-| \`favicon.svg\` | Kleines Raster-Symbol |
+| `index.html` | Struktur und Benutzeroberfläche |
+| `styles.css` | Layout für Smartphone, Tablet und Desktop |
+| `app.js` | Spiellogik, Eingabe, Navigation, Speicherung |
+| `puzzles.js` | Rätseldaten – ohne Änderung der Spiellogik erweiterbar |
+| `favicon.svg` | Kleines Raster-Symbol |
 
 ## Neue Rätsel hinzufügen
 
-In \`puzzles.js\` ein weiteres Objekt in \`window.CROSSWORD_PUZZLES\` ergänzen:
+In `puzzles.js` ein weiteres Objekt in `window.CROSSWORD_PUZZLES` ergänzen:
 
-\`\`\`javascript
+```javascript
 {
   id: "mittel-002",
   difficulty: "mittel",
@@ -51,7 +51,7 @@ In \`puzzles.js\` ein weiteres Objekt in \`window.CROSSWORD_PUZZLES\` ergänzen:
     ["BAUM", "Hat Stamm und Krone", 0, 0, "across"]
   ]
 }
-\`\`\`
+```
 
 Koordinaten beginnen bei **0**. Die Antworten müssen sich an Kreuzungspunkten denselben Buchstaben teilen. Die Webapp validiert widersprüchliche Kreuzungen beim Laden.
 
@@ -59,4 +59,4 @@ Koordinaten beginnen bei **0**. Die Antworten müssen sich an Kreuzungspunkten d
 
 ## Lokal testen
 
-Die \`index.html\` direkt im Browser öffnen. Alle JavaScript- und CSS-Dateien werden über relative Pfade geladen und benötigen keinen Build-Schritt.
+Die `index.html` direkt im Browser öffnen. Alle JavaScript- und CSS-Dateien werden über relative Pfade geladen und benötigen keinen Build-Schritt.
