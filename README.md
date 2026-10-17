@@ -1,57 +1,50 @@
 # Die Rätselseite – Schwedenrätsel
 
-Eine neu aufgebaute, statische Schwedenrätsel-Webapp für iPhone, iPad und Desktop – wie eine Rätselseite aus der Zeitung. Hinweise und Pfeile stehen **direkt in den grauen Rasterfeldern**, nicht in einer separaten Hinweisliste.
+Eine statische Webapp für iPhone, iPad und Desktop. Die Hinweise stehen wie in einem Zeitschriften-Schwedenrätsel **direkt im Raster**; die Lösungsbuchstaben stehen darunter. Keine Anmeldung, kein Backend, keine externe Laufzeitabhängigkeit.
 
 ## Spielen
 
-- Weißes Feld antippen: Buchstabe eingeben. An Kreuzungen erneut tippen, um die Richtung zu wechseln.
-- Graues Hinweisfeld antippen: passenden Begriff auswählen.
-- Der ganze Begriff wird markiert; der vollständige Hinweis steht zusätzlich über dem Raster.
-- Die kleinen Nummern in Buchstabenfeldern verweisen auf das **Lösungswort** am Seitenende. Dieses füllt sich von selbst.
-- Auf dem iPhone das Raster **seitlich verschieben**, damit die kleinen Hinweistexte lesbar bleiben. Mit **−** und **+** lässt sich die Größe zusätzlich verändern.
-- Über das unauffällige **•••**-Menü oben rechts zwischen Leicht, Mittel und Schwer wechseln, Einträge prüfen, einen Buchstaben aufdecken oder ein Rätsel zurücksetzen.
-- Fortschritt wird je Rätsel im Browser (`localStorage`) gespeichert. Keine Anmeldung, kein Backend.
+- **+ Neues Rätsel** oben: Auf Knopfdruck wird ein neues Schwedenrätsel für den aktuell gewählten Schwierigkeitsgrad generiert.
+- **••• → Leicht / Mittel / Schwer**: Schwierigkeit wechseln. Die zuletzt gespielte Ausgabe pro Schwierigkeit öffnet sich automatisch.
+- **••• → Letzte Ausgaben**: Zu früheren Spielen zurückkehren, ohne einen angefangenen Spielstand zu verlieren. Die 15 jüngsten generierten Rätsel **je Schwierigkeitsgrad** werden auf diesem Gerät aufbewahrt, außerdem die ursprüngliche Ausgabe 01.
+- Weißes Feld antippen und Buchstaben eingeben. Kreuzung erneut antippen, um die Richtung zu wechseln.
+- Graues Hinweisfeld antippen, um das zugehörige Wort auszuwählen.
+- Die nummerierten Felder ergeben das **Lösungswort** unter dem Rätsel.
+- Auf dem iPhone das Raster seitlich verschieben und bei Bedarf mit **−**/**+** zoomen.
+- Im Menü kann man die Einträge prüfen, einen Buchstaben aufdecken oder das aktuelle Rätsel leeren.
+- Spielstände und erzeugte Rätsel werden lokal im Browser per `localStorage` gespeichert. Sie sind nicht zwischen Geräten synchronisiert und gehen beim Löschen der Browserdaten verloren.
 
-## Bereitgestellte Rätsel
+## Neue Rätsel – ohne Server
 
-| Schwierigkeitsgrad | Ausgabe | Begriffe | Raster |
-| --- | --- | ---: | --- |
-| Leicht | 01 | 39 | 16 × 16 |
-| Mittel | 01 | 40 | 16 × 16 |
-| Schwer | 01 | 39 | 17 × 17 |
+`wordbank.js` enthält **549 kuratierte deutsche Begriffe mit Hinweisen**. `generator.js` erstellt daraus jedes Mal mithilfe eines zufällig ausgewählten 32-Bit-Seeds ein anderes 16×16- bzw. 17×17-Schwedenrätsel. Es prüft dabei die Buchstaben an Kreuzungen, eindeutige Hinweispositionen und das Lösungswort. Leichte Rätsel verwenden den einfacheren Wortbestand; schwere Rätsel bevorzugen anspruchsvollere Begriffe.
 
-## Aufbau
+Die Kombinationen sind so zahlreich, dass immer wieder neue Ausgaben möglich sind. Es handelt sich aber **nicht um tatsächlich unendlich viele verschiedene Fragen**: Der Wortschatz ist endlich, einzelne Hinweise wiederholen sich deshalb gelegentlich in anderen Kombinationen.
 
-- `index.html`: komplette Oberfläche
-- `style.css`: klassischer Magazin-/Zeitungsstil und responsives Layout
-- `main.js`: Spiellogik, Eingabe, Prüfung, Zoom und Speicherung
-- `raetsel.js`: Rätseldaten mit Hinweis-, Buchstaben- und Lösungsfeldern
-- `favicon.svg`: Pfeilrätsel-Icon
+### Datenmodell und Speicherung
 
-Die frühere Kreuzworträtsel-App wurde **vollständig ersetzt**. Keine ihrer Spiellogik-Dateien wird mehr benötigt.
+- Die drei bisherigen, handgeprüften Rätsel bleiben als **Ausgabe 01** in `raetsel.js` erhalten.
+- Neue Ausgaben erhalten je Schwierigkeitsgrad laufende Nummern (`02`, `03` usw.) und eine eigene ID.
+- Das generierte Raster wird zusammen mit seinem Lösungswort gespeichert, damit ein späterer App- oder Wortlistenstand bereits begonnene Rätsel nicht verändert.
+- Um den lokalen Speicher zu begrenzen, werden pro Schwierigkeitsgrad die 15 zuletzt generierten Ausgaben archiviert. Ältere generierte Ausgaben werden automatisch entfernt; **Ausgabe 01** bleibt zugänglich.
 
-### Weitere Ausgaben ergänzen
+## Dateien
 
-Ein weiteres Objekt in `window.SCHWEDENRAETSEL` in `raetsel.js` ergänzen, mit einzigartiger `id`, `level` (`leicht`, `mittel` oder `schwer`), `title`, `size`, `number`, `entries` und `solution`. Jedes Rätselwort enthält:
+| Datei | Inhalt |
+|---|---|
+| `index.html` | Oberfläche |
+| `style.css` | Zeitschriften-Layout und responsives Design |
+| `main.js` | Spiellogik, neue Ausgabe, Navigation, Prüfung, Zoom und Speicherstände |
+| `raetsel.js` | Drei handgeprüfte Ausgangsrätsel |
+| `wordbank.js` | Deutscher Wort- und Hinweiskatalog |
+| `generator.js` | Prozeduraler Schwedenrätsel-Generator |
+| `favicon.svg` | Raster-Icon |
 
-```javascript
-{
-  answer: "KATZE",        // Großbuchstaben, Umlaute AE/OE/UE
-  clue: "Schnurrendes Tier",
-  row: 4, col: 3,         // Buchstabenstart (nullbasiert)
-  direction: "right",    // "right" oder "down"
-  clueRow: 4, clueCol: 2  // Graues Hinweisfeld direkt links bzw. darüber
-}
-```
+Zum Hinzufügen neuer Wörter in `wordbank.js` eine Zeile `LOESUNG|Hinweis|0` (allgemein) oder `LOESUNG|Hinweis|1` (anspruchsvoller Begriff) ergänzen. Umlaute werden als `AE`, `OE`, `UE`, `SS` geschrieben.
 
-Die `solution` enthält ein `answer` und ein `cells`-Array mit `[zeile, spalte]` für jeden Buchstaben des Lösungsworts (jeweils ein eindeutiges Buchstabenfeld). Die App prüft beim Laden sämtliche Kreuzungen und die Lösungsfelder. Mehrere Ausgaben pro Stufe sind im Datenmodell möglich; derzeit zeigt die UI die erste Ausgabe pro Stufe.
+## GitHub Pages
 
-## Hosting auf GitHub Pages
+`Settings → Pages → Deploy from a branch → main → /(root)`.
 
-`Settings → Pages → Build and deployment → Deploy from a branch → main → /(root)`.
+Voraussichtliche Adresse nach Aktivierung: <https://bilgery-solutions.github.io/kreuzwortraetsel/>. Falls die Organisation das Repository privat belässt, benötigt sie für Pages einen GitHub-Plan, der Pages aus privaten Repositories unterstützt.
 
-Projekt-URL nach Aktivierung: <https://bilgery-solutions.github.io/kreuzwortraetsel/>.
-
-Das Repository ist derzeit privat. Für GitHub Pages aus einem privaten Organisations-Repository ist ein geeigneter GitHub-Plan nötig; andernfalls kann es für eine öffentliche GitHub-Pages-Seite öffentlich gestellt werden. Die veröffentlichte Seite ist öffentlich zugänglich, auch wenn das Repository privat sein kann.
-
-Es gibt keinen Build-Schritt und keine externen Laufzeitabhängigkeiten. Für lokale Tests `index.html` öffnen oder einen einfachen statischen Webserver nutzen.
+Zum lokalen Testen kann `index.html` direkt im Browser geöffnet werden. Ein Build-Schritt ist nicht nötig.

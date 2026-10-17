@@ -23,11 +23,21 @@ button:focus-visible, input:focus-visible { outline: 2px solid #405f48; outline-
 h1 { margin: 5px 0 0; font: bold clamp(27px, 4vw, 41px)/1.16 Georgia, "Times New Roman", serif; letter-spacing: -.055em; }
 h1 span { color: #727a72; }
 .header-actions { display: flex; align-items: center; gap: 16px; padding-bottom: 2px; }
+.new-game-button { border: 1px solid #a7aca3; background: #fffef9; padding: 9px 13px; color: #2f3a30; font-size: 12px; font-weight: 700; white-space: nowrap; }
+.new-game-button:hover { background: #e1e6df; border-color: #586c59; }
+.new-game-button:active { background: #cfd8cd; }
+.new-game-button:disabled { cursor: wait; opacity: .65; }
+.history-section { border-top: 1px solid #e3e4df; margin-top: 15px; padding-top: 8px; }
+.history-section summary { padding: 10px 2px; font-size: 13px; font-weight: 600; cursor: pointer; }
+.history-list { max-height: 230px; overflow-y: auto; padding: 2px 0 8px; }
+.history-button { display: block; width: 100%; background: #fffefa; border: 0; border-bottom: 1px solid #eeefe9; text-align: left; padding: 10px 8px; font-size: 12px; color: #4c544d; }
+.history-button:hover, .history-button[aria-current="true"] { background: #e6ebe4; color: #222522; }
+.history-button[aria-current="true"] { font-weight: 700; }
 .issue-indicator { font-size: 10px; font-weight: 700; letter-spacing: .12em; white-space: nowrap; }
 .dot { font-size: 15px; padding: 0 3px; color: #8b918b; }
 .menu-button { border: 1px solid #9ca29b; background: transparent; width: 40px; height: 37px; font-size: 14px; font-weight: 800; letter-spacing: 2px; padding: 0 0 8px 2px; }
 .menu-button:hover, .menu-button[aria-expanded="true"] { background: #dedfd8; }
-.menu-panel { position: absolute; top: calc(100% + 6px); right: 0; width: min(290px, calc(100vw - 34px)); z-index: 80; background: #fffefb; border: 1px solid #bbbdb7; box-shadow: 0 12px 35px #171c1826; padding: 20px; }
+.menu-panel { max-height: min(80vh, 640px); overflow-y: auto; position: absolute; top: calc(100% + 6px); right: 0; width: min(290px, calc(100vw - 34px)); z-index: 80; background: #fffefb; border: 1px solid #bbbdb7; box-shadow: 0 12px 35px #171c1826; padding: 20px; }
 .menu-panel h2 { font: bold 17px/1.25 Georgia,serif; margin: 0 0 14px; }
 .level-options { display: grid; grid-template-columns: repeat(3,1fr); gap: 4px; }
 .level-options button { border: 1px solid #caccc6; background: #f8f8f4; padding: 10px 1px; font-size: 12px; }
@@ -104,7 +114,9 @@ h1 span { color: #727a72; }
   .page-header { padding-bottom: 12px; }
   .overline { font-size: 8px; letter-spacing: .12em; }
   h1 { font-size: clamp(25px, 7.5vw, 34px); }
-  .header-actions { gap: 8px; }
+  .header-actions { gap: 7px; }
+  .new-game-button { font-size: 10px; padding: 8px 7px; }
+  .issue-indicator { display: none; }
   .issue-indicator { font-size: 9px; }
   .menu-button { width: 36px; height: 34px; }
   .puzzle-page { margin-top: 12px; padding: 12px 10px 18px; }
@@ -130,3 +142,9 @@ h1 span { color: #727a72; }
   .outside-footer span { display: block; margin-top: 4px; }
 }
 @media (prefers-reduced-motion: reduce) { *,*::before,*::after { scroll-behavior: auto !important; } }
+
+@media (max-width: 370px) {
+  h1 { font-size: 25px; }
+  .new-game-button { font-size: 9px; padding: 8px 5px; }
+  .overline { font-size: 7px; }
+}

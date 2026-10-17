@@ -4,6 +4,20 @@
   const puzzles = window.SCHWEDENRAETSEL || [];
   const STORAGE_PREFIX = 'schwedenraetsel:v2:';
   const LAST_LEVEL = 'schwedenraetsel:v2:level';
+  const HISTORY_KEY = 'schwedenraetsel:v3:history';
+  const CURRENT_KEY = 'schwedenraetsel:v3:current';
+  const COUNTERS_KEY = 'schwedenraetsel:v3:counters';
+  const PUZZLE_KEY = 'schwedenraetsel:v3:puzzle:';
+  const HISTORY_LIMIT = 15;
+  const history = [];
+  const savedHistory = (() => {
+    try { return JSON.parse(localStorage.getItem(HISTORY_KEY)) || []; }
+    catch (_) { return []; }
+  })();
+  const currentByLevel = (() => {
+    try { return JSON.parse(localStorage.getItem(CURRENT_KEY)) || {}; }
+    catch (_) { return {}; }
+  })();
   const levelNames = { leicht: 'LEICHT', mittel: 'MITTEL', schwer: 'SCHWER' };
   const byId = (id) => document.getElementById(id);
   const ui = {
@@ -97,8 +111,16 @@
   }
 
   function setLevel(level) {
-    const puzzle = puzzles.find((item) => item.level === level);
+    const puzzle = puzzles.find((item) => item.id === currentByLevel[level]) ||
+      puzzles.find((item) => item.level === level);
     if (!puzzle) return;
+    setPuzzle(puzzle);
+  }
+
+  function setPuzzle(puzzle) {
+    const level = puzzle.level;
+    currentByLevel[level] = puzzle.id;
+    save(CURRENT_KEY, currentByLevel);
     const model = modelFor(puzzle);
     const stored = load(STORAGE_PREFIX + puzzle.id, {});
     const oldLetters = stored && stored.letters && typeof stored.letters === 'object' ? stored.letters : {};
@@ -129,6 +151,78 @@
     ui.scroll.scrollLeft = 0;
     showStatus('');
     if (completed()) markComplete();
+    renderHistory();
+  }
+
+  function renderHistory() {
+    const list = byId('historyList');
+    if (!list || !game) return;
+    const level = game.model.puzzle.level;
+    const options = [
+      ...history.filter((entry) => entry.level === level).slice().reverse().map((entry) =>
+        puzzles.find((puzzle) => puzzle.id === entry.id)).filter(Boolean),
+      ...puzzles.filter((item) => item.level === level && !item.id.startsWith('generiert-'))
+    ];
+    const fragment = document.createDocumentFragment();
+    options.forEach((puzzle) => {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'history-button';
+      button.textContent = `Nr. ${puzzle.number} · ${puzzle.title}`;
+      button.setAttribute('aria-current', String(puzzle.id === game.model.puzzle.id));
+      button.addEventListener('click', () => { setPuzzle(puzzle); showMenu(false); });
+      fragment.append(button);
+    });
+    list.replaceChildren(fragment);
+  }
+
+  function startNewGame() {
+    if (!game || typeof window.generiereSchwedenraetsel !== 'function') return;
+    const level = game.model.puzzle.level;
+    const counters = load(COUNTERS_KEY, {}) || {};
+    const lastNumber = Math.max(1, Number(counters[level]) || 1);
+    let puzzle = null;
+    for (let attempt = 0; attempt < 8; attempt++) {
+      let seed;
+      if (window.crypto && typeof window.crypto.getRandomValues === 'function') {
+        const random = new Uint32Array(1);
+        window.crypto.getRandomValues(random);
+        seed = random[0];
+      } else {
+        seed = Math.floor(Math.random() * 4294967296) >>> 0;
+      }
+      const id = 'generiert-' + level + '-' + seed.toString(36);
+      if (puzzles.some((item) => item.id === id)) continue;
+      try {
+        puzzle = window.generiereSchwedenraetsel(level, seed, String(lastNumber + 1).padStart(2, '0'));
+        modelFor(puzzle); // Refuse contradictory or invalid generated puzzles.
+        break;
+      } catch (error) { console.warn('Rätsel neu berechnen:', error); }
+    }
+    if (!puzzle) {
+      showStatus('Ein neues Rätsel konnte nicht erstellt werden. Bitte erneut versuchen.', 'error');
+      return;
+    }
+    save(PUZZLE_KEY + puzzle.id, puzzle); // Preserve the layout even after app updates.
+    puzzles.push(puzzle);
+    history.push({ id: puzzle.id, level });
+    const sameLevel = history.filter((entry) => entry.level === level);
+    if (sameLevel.length > HISTORY_LIMIT) {
+      const oldest = sameLevel[0];
+      const index = history.findIndex((item) => item.id === oldest.id);
+      if (index >= 0) history.splice(index, 1);
+      // Discard oldest archived data to keep browser storage bounded.
+      clear(PUZZLE_KEY + oldest.id);
+      clear(STORAGE_PREFIX + oldest.id);
+      const indexInPuzzles = puzzles.findIndex((item) => item.id === oldest.id);
+      if (indexInPuzzles >= 0) puzzles.splice(indexInPuzzles, 1);
+    }
+    save(HISTORY_KEY, history);
+    counters[level] = lastNumber + 1;
+    save(COUNTERS_KEY, counters);
+    setPuzzle(puzzle);
+    showMenu(false);
+    showStatus('Ein neues Rätsel ist bereit. Viel Spaß!');
   }
 
   function drawGrid() {
@@ -439,6 +533,7 @@
     if (tile && game) selectKey(tile.dataset.key, false, true);
   });
   byId('nextWord').addEventListener('click', nextEntry);
+  byId('newGameButton').addEventListener('click', startNewGame);
 
   function showMenu(open) {
     ui.menu.hidden = !open;
@@ -491,9 +586,9 @@
   byId('resetButton').addEventListener('click', () => {
     showMenu(false);
     if (!game || !window.confirm('Dieses Rätsel wirklich leeren? Der bisherige Spielstand geht verloren.')) return;
-    const level = game.model.puzzle.level;
-    clear(STORAGE_PREFIX + game.model.puzzle.id);
-    setLevel(level);
+    const puzzle = game.model.puzzle;
+    clear(STORAGE_PREFIX + puzzle.id);
+    setPuzzle(puzzle);
     showStatus('Dieses Rätsel wurde zurückgesetzt.');
   });
   ui.zoomOut.addEventListener('click', () => { if (zoomStep > -1) { zoomStep--; resizeCells(); } });
@@ -502,7 +597,19 @@
 
   try {
     if (!puzzles.length) throw Error('Es sind keine Rätsel vorhanden.');
-    for (const puzzle of puzzles) modelFor(puzzle); // Check all puzzles at startup.
+    for (const puzzle of puzzles) modelFor(puzzle); // Check all bundled puzzles at startup.
+    if (Array.isArray(savedHistory)) {
+      for (const entry of savedHistory.slice(-HISTORY_LIMIT * 3)) {
+        if (!entry || typeof entry.id !== 'string' || !['leicht', 'mittel', 'schwer'].includes(entry.level)) continue;
+        const puzzle = load(PUZZLE_KEY + entry.id);
+        if (!puzzle || puzzle.id !== entry.id || puzzle.level !== entry.level) continue;
+        try {
+          modelFor(puzzle);
+          puzzles.push(puzzle);
+          history.push({ id: entry.id, level: entry.level });
+        } catch (error) { console.warn('Gespeichertes Rätsel übersprungen:', error); }
+      }
+    }
     const previous = load(LAST_LEVEL, 'leicht');
     setLevel(levelNames[previous] ? previous : 'leicht');
   } catch (error) {

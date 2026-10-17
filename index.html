@@ -9,6 +9,8 @@
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./style.css">
   <script src="./raetsel.js" defer></script>
+  <script src="./wordbank.js" defer></script>
+  <script src="./generator.js" defer></script>
   <script src="./main.js" defer></script>
 </head>
 <body>
@@ -19,6 +21,7 @@
         <h1>Schwedenrätsel<span aria-hidden="true">.</span></h1>
       </div>
       <div class="header-actions">
+        <button id="newGameButton" class="new-game-button" type="button" title="Ein neues Schwedenrätsel erstellen">+ Neues Rätsel</button>
         <span class="issue-indicator" id="issueIndicator">NR. 01 <span class="dot">·</span> LEICHT</span>
         <button id="menuButton" class="menu-button" type="button" aria-expanded="false" aria-controls="menuPanel" aria-label="Rätseleinstellungen öffnen" title="Rätseleinstellungen">•••</button>
         <div class="menu-panel" id="menuPanel" hidden>
@@ -28,6 +31,10 @@
             <button type="button" data-level="mittel">Mittel</button>
             <button type="button" data-level="schwer">Schwer</button>
           </div>
+          <details class="history-section" id="historySection">
+            <summary>Letzte Ausgaben</summary>
+            <div class="history-list" id="historyList"></div>
+          </details>
           <div class="menu-divider"></div>
           <button id="checkButton" class="menu-action" type="button">Einträge prüfen</button>
           <button id="revealButton" class="menu-action" type="button">Buchstaben aufdecken</button>
