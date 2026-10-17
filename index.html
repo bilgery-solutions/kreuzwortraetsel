@@ -3,9 +3,12 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#eeeee8">
-  <meta name="description" content="Schwedenrätsel wie aus der Zeitung – mit Hinweisen direkt im Raster. Kostenlos, ohne Anmeldung, für iPhone und iPad.">
-  <title>Schwedenrätsel · Die Rätselseite</title>
+  <meta name="theme-color" content="#f8f9fc">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Schwedenrätsel">
+  <meta name="description" content="Schwedenrätsel mit Hinweisen im Raster. Immer neue Rätsel, drei Schwierigkeitsgrade und ein ruhiges Design.">
+  <title>Schwedenrätsel</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./style.css">
   <script src="./raetsel.js" defer></script>
@@ -14,81 +17,106 @@
   <script src="./main.js" defer></script>
 </head>
 <body>
-  <main class="page">
-    <header class="page-header">
-      <div class="brand">
-        <div class="overline">DIE RÄTSELSEITE <span aria-hidden="true">/</span> DEUTSCHE AUSGABE</div>
-        <h1>Schwedenrätsel<span aria-hidden="true">.</span></h1>
-      </div>
+  <main class="shell">
+    <header class="masthead">
+      <div class="identity"><h1>Schwedenrätsel<span class="brand-period" aria-hidden="true">.</span></h1></div>
       <div class="header-actions">
-        <button id="newGameButton" class="new-game-button" type="button" title="Ein neues Schwedenrätsel erstellen">+ Neues Rätsel</button>
-        <span class="issue-indicator" id="issueIndicator">NR. 01 <span class="dot">·</span> LEICHT</span>
-        <button id="menuButton" class="menu-button" type="button" aria-expanded="false" aria-controls="menuPanel" aria-label="Rätseleinstellungen öffnen" title="Rätseleinstellungen">•••</button>
+        <button class="new-button" id="newGameButton" type="button" aria-label="Neues Schwedenrätsel starten">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" aria-hidden="true"><path d="M12 5v14M5 12h14"/></svg>
+          <span>Neu</span>
+        </button>
+        <button id="menuButton" class="menu-button" type="button" aria-expanded="false" aria-controls="menuPanel" aria-label="Weitere Optionen" title="Weitere Optionen">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><circle cx="5" cy="12" r="1.8"/><circle cx="12" cy="12" r="1.8"/><circle cx="19" cy="12" r="1.8"/></svg>
+        </button>
         <div class="menu-panel" id="menuPanel" hidden>
-          <h2>Rätsel auswählen</h2>
-          <div class="level-options" role="group" aria-label="Schwierigkeitsgrad">
-            <button type="button" data-level="leicht">Leicht</button>
-            <button type="button" data-level="mittel">Mittel</button>
-            <button type="button" data-level="schwer">Schwer</button>
-          </div>
+          <h2>Weitere Optionen</h2>
           <details class="history-section" id="historySection">
-            <summary>Letzte Ausgaben</summary>
+            <summary>Letzte Rätsel</summary>
             <div class="history-list" id="historyList"></div>
           </details>
-          <div class="menu-divider"></div>
-          <button id="checkButton" class="menu-action" type="button">Einträge prüfen</button>
-          <button id="revealButton" class="menu-action" type="button">Buchstaben aufdecken</button>
-          <button id="resetButton" class="menu-action menu-danger" type="button">Rätsel zurücksetzen</button>
+          <p class="menu-note">Dein Fortschritt wird automatisch auf diesem Gerät gespeichert.</p>
         </div>
       </div>
     </header>
 
-    <article class="puzzle-page" aria-label="Schwedenrätsel">
-      <div class="puzzle-heading">
-        <div>
-          <span class="eyebrow">SCHWEDENRÄTSEL <span class="thin-dot">/</span> AUSGABE <span id="issueNumber">01</span></span>
-          <h2 id="puzzleTitle">Eine kleine Auszeit</h2>
+    <nav class="levels" aria-label="Schwierigkeitsgrad">
+      <button type="button" class="level" data-level="leicht" aria-pressed="true">Leicht</button>
+      <button type="button" class="level" data-level="mittel" aria-pressed="false">Mittel</button>
+      <button type="button" class="level" data-level="schwer" aria-pressed="false">Schwer</button>
+    </nav>
+
+    <section class="game" aria-label="Schwedenrätsel spielen">
+      <div class="game-info">
+        <div class="game-label">
+          <span id="issueIndicator">NR. 01 · LEICHT</span>
+          <span class="tiny-dot" aria-hidden="true"></span>
+          <span><span id="filledCount">0 / 0</span> FELDER</span>
         </div>
-        <div class="fill-status"><span id="filledCount">0 / 0</span> FELDER</div>
+        <span class="game-genre">SCHWEDENRÄTSEL</span>
       </div>
 
-      <div class="active-hint" id="activeHint" aria-live="polite" aria-atomic="true">
-        <div class="hint-arrow" id="hintArrow" aria-hidden="true">→</div>
-        <div class="hint-text">
-          <small id="hintDirection">HINWEIS</small>
-          <strong id="hintCopy">Ein Hinweisfeld oder ein weißes Kästchen antippen.</strong>
-        </div>
-        <button class="next-button" id="nextWord" type="button" title="Nächster Begriff" aria-label="Nächsten Begriff auswählen">›</button>
-      </div>
-
-      <div class="grid-area">
-        <div class="grid-scroll" id="gridScroll" aria-label="Verschiebbares Schwedenrätsel-Raster" tabindex="0">
-          <div class="puzzle-grid" id="grid" role="group" aria-label="Rätselraster"></div>
-        </div>
-        <div class="grid-bottomnote">
-          <span id="scrollTip">Hinweis anklicken oder in ein weißes Feld tippen.</span>
-          <div class="zoom-controls" aria-label="Rastergröße">
-            <button id="zoomOut" title="Raster verkleinern" aria-label="Raster verkleinern" type="button">−</button>
-            <span id="zoomValue">100 %</span>
-            <button id="zoomIn" title="Raster vergrößern" aria-label="Raster vergrößern" type="button">+</button>
+      <article class="puzzle-page" aria-label="Schwedenrätsel">
+        <div class="puzzle-heading">
+          <div>
+            <span class="eyebrow">AUSGABE <span id="issueNumber">01</span></span>
+            <h2 id="puzzleTitle">Eine kleine Auszeit</h2>
           </div>
         </div>
-      </div>
 
-      <section class="solution-section" aria-label="Lösungswort">
-        <div class="solution-heading">
-          <strong>LÖSUNGSWORT</strong>
-          <span>Die nummerierten Kästchen ergeben das Lösungswort.</span>
+        <div class="active-hint" id="activeHint" aria-live="polite" aria-atomic="true">
+          <div class="hint-arrow" id="hintArrow" aria-hidden="true">→</div>
+          <div class="hint-text">
+            <small id="hintDirection">HINWEIS</small>
+            <strong id="hintCopy">Tippe auf ein Hinweisfeld oder ein weißes Kästchen.</strong>
+          </div>
+          <button class="next-button" id="nextWord" type="button" title="Nächster Begriff" aria-label="Nächsten Begriff auswählen">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 5 7 7-7 7"/></svg>
+          </button>
         </div>
-        <div class="solution-scroll">
-          <div class="solution-grid" id="solutionGrid"></div>
-        </div>
-      </section>
-      <div class="paper-footer"><span>Ä = AE · Ö = OE · Ü = UE · ß = SS</span><span id="completeMark">VIEL FREUDE BEIM RÄTSELN</span></div>
-    </article>
 
-    <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
-    <footer class="outside-footer">Ein kleines Stück Rätselzeit. <span>Dein Spielstand bleibt auf diesem Gerät.</span></footer>
+        <div class="grid-area">
+          <div class="grid-scroll" id="gridScroll" aria-label="Verschiebbares Schwedenrätsel-Raster" tabindex="0">
+            <div class="puzzle-grid" id="grid" role="group" aria-label="Rätselraster"></div>
+          </div>
+          <div class="grid-bottomnote">
+            <span id="scrollTip">Hinweis oder weißes Feld antippen.</span>
+            <div class="zoom-controls" aria-label="Rastergröße">
+              <button id="zoomOut" title="Raster verkleinern" aria-label="Raster verkleinern" type="button">−</button>
+              <span id="zoomValue">100 %</span>
+              <button id="zoomIn" title="Raster vergrößern" aria-label="Raster vergrößern" type="button">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="tools" aria-label="Spielwerkzeuge">
+          <button class="tool" id="checkButton" type="button" aria-label="Einträge prüfen">
+            <span class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8 12 2.5 2.5L16 9"/></svg></span><span>Prüfen</span>
+          </button>
+          <button class="tool" id="revealButton" type="button" aria-label="Einen richtigen Buchstaben anzeigen">
+            <span class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18h6M10 21h4"/><path d="M8 14.5a7 7 0 1 1 8 0c-.8.7-1 1.7-1 2.5H9c0-.8-.2-1.8-1-2.5Z"/></svg></span><span>Hinweis</span>
+          </button>
+          <button class="tool" id="resetButton" type="button" aria-label="Dieses Rätsel zurücksetzen">
+            <span class="tool-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11a9 9 0 1 1 2.8 6.5"/><path d="M3 4v7h7"/></svg></span><span>Zurücksetzen</span>
+          </button>
+        </div>
+
+        <section class="solution-section" aria-label="Lösungswort">
+          <div class="solution-heading">
+            <strong>LÖSUNGSWORT</strong>
+            <span>Die markierten Buchstaben bilden das Lösungswort.</span>
+          </div>
+          <div class="solution-scroll">
+            <div class="solution-grid" id="solutionGrid"></div>
+          </div>
+        </section>
+        <div class="paper-footer"><span>Ä = AE · Ö = OE · Ü = UE · ß = SS</span><span id="completeMark">VIEL FREUDE BEIM RÄTSELN</span></div>
+      </article>
+
+      <p class="status-message" id="statusMessage" role="status" aria-live="polite"></p>
+      <footer class="game-footer">
+        <a class="brand-signature" href="https://bilgery-solutions.de" target="_blank" rel="noopener noreferrer" aria-label="Website von Bilgery Solutions öffnen"><strong>BILGERY</strong> <span>SOLUTIONS</span></a>
+      </footer>
+    </section>
   </main>
 </body>
 </html>
