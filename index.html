@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f5f4f0">
+  <meta name="description" content="Klassische Kreuzworträtsel auf Deutsch – für iPhone, iPad und Desktop. Kostenlos und ohne Anmeldung.">
+  <title>Kreuzworträtsel – Die Rätselstunde</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./styles.css">
+  <script src="./puzzles.js" defer></script>
+  <script src="./app.js" defer></script>
+</head>
+<body>
+  <div class="site">
+    <header class="masthead">
+      <div class="masthead-line">
+        <span>DIE RÄTSELSTUNDE</span>
+        <span>KLASSISCH · DIGITAL</span>
+      </div>
+      <div class="masthead-main">
+        <div>
+          <h1>Kreuzworträtsel<span class="title-dot">.</span></h1>
+          <p>Ein gutes Rätsel. Ein klarer Kopf.</p>
+        </div>
+        <div class="edition" aria-hidden="true">
+          <span>DEUTSCHE AUSGABE</span>
+          <strong>№ 001</strong>
+        </div>
+      </div>
+    </header>
+
+    <section class="difficulty-section" aria-labelledby="difficulty-title">
+      <div>
+        <span class="eyebrow">01 / RÄTSEL AUSWÄHLEN</span>
+        <h2 id="difficulty-title">Schwierigkeitsgrad</h2>
+      </div>
+      <div class="difficulty-switch" role="group" aria-label="Schwierigkeitsgrad">
+        <button type="button" data-difficulty="leicht" aria-pressed="true">Leicht</button>
+        <button type="button" data-difficulty="mittel" aria-pressed="false">Mittel</button>
+        <button type="button" data-difficulty="schwer" aria-pressed="false">Schwer</button>
+      </div>
+    </section>
+
+    <main class="game-layout">
+      <section class="paper" aria-labelledby="puzzle-title">
+        <div class="paper-head">
+          <div>
+            <span class="eyebrow" id="puzzle-edition">KREUZWORTRÄTSEL · NR. 01</span>
+            <h2 id="puzzle-title">Der kleine Zeitvertreib</h2>
+            <p id="puzzle-description">Wählen Sie ein Feld und tragen Sie die Lösung ein.</p>
+          </div>
+          <div class="paper-stamp" id="puzzle-difficulty">LEICHT</div>
+        </div>
+
+        <div class="progress-line">
+          <span><strong id="progress-percent">0 %</strong> gelöst</span>
+          <span id="progress-count">0 von 0 Feldern</span>
+        </div>
+        <div class="progress-track" role="progressbar" aria-label="Rätselfortschritt" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" id="progress-bar">
+          <div id="progress-fill"></div>
+        </div>
+
+        <div class="board-frame">
+          <div class="board" id="board" role="group" aria-label="Kreuzworträtsel-Gitter"></div>
+        </div>
+
+        <div class="active-clue" aria-live="polite" aria-atomic="true">
+          <button id="previous-clue" class="clue-nav" type="button" aria-label="Vorheriger Hinweis" title="Vorheriger Hinweis">‹</button>
+          <div class="active-clue-content">
+            <span id="active-clue-label" class="eyebrow">WAAGERECHT · 1</span>
+            <p id="active-clue-text">Tippen Sie auf einen Begriff oder ein Feld.</p>
+          </div>
+          <button id="next-clue" class="clue-nav" type="button" aria-label="Nächster Hinweis" title="Nächster Hinweis">›</button>
+        </div>
+
+        <div class="toolbar" aria-label="Spielaktionen">
+          <button class="action action-primary" id="check-button" type="button">Antworten prüfen</button>
+          <button class="action" id="hint-button" type="button">Buchstabe zeigen</button>
+          <button class="action action-quiet" id="reset-button" type="button">Zurücksetzen</button>
+        </div>
+        <p class="message" id="message" role="status" aria-live="polite"></p>
+      </section>
+
+      <aside class="clue-panel" aria-label="Alle Hinweise">
+        <div class="clue-panel-header">
+          <span class="eyebrow">02 / HINWEISE</span>
+          <h2>Die Hinweise</h2>
+          <p>Wählen Sie einen Hinweis aus, um direkt zum passenden Wort zu springen.</p>
+        </div>
+        <div class="clue-groups">
+          <section class="clue-group" aria-labelledby="across-title">
+            <h3 id="across-title"><span>→</span> Waagerecht</h3>
+            <div class="clue-list" id="across-clues"></div>
+          </section>
+          <section class="clue-group" aria-labelledby="down-title">
+            <h3 id="down-title"><span>↓</span> Senkrecht</h3>
+            <div class="clue-list" id="down-clues"></div>
+          </section>
+        </div>
+      </aside>
+    </main>
+
+    <footer class="footer">
+      <p>Ein Kreuzworträtsel für zwischendurch.</p>
+      <p>Ohne Anmeldung · Fortschritt auf diesem Gerät gespeichert</p>
+    </footer>
+  </div>
+</body>
+</html>
