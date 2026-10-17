@@ -22,7 +22,6 @@
   const byId = (id) => document.getElementById(id);
   const ui = {
     grid: byId('grid'), scroll: byId('gridScroll'), menu: byId('menuPanel'), menuButton: byId('menuButton'),
-    issue: byId('issueIndicator'), number: byId('issueNumber'), title: byId('puzzleTitle'), count: byId('filledCount'),
     hint: byId('activeHint'), hintArrow: byId('hintArrow'), hintDirection: byId('hintDirection'), hintCopy: byId('hintCopy'),
     solution: byId('solutionGrid'), zoom: byId('zoomValue'), zoomOut: byId('zoomOut'), zoomIn: byId('zoomIn'),
     status: byId('statusMessage'), complete: byId('completeMark'), scrollTip: byId('scrollTip')
@@ -172,9 +171,6 @@
     elapsedSeconds = Math.max(0, Math.floor(Number(load(TIMER_PREFIX + puzzle.id, 0)) || 0));
     showTimer();
     zoomStep = 0;
-    ui.title.textContent = puzzle.title;
-    ui.number.textContent = puzzle.number;
-    ui.issue.textContent = `NR. ${puzzle.number} · ${levelNames[level]}`;
     ui.complete.textContent = 'VIEL FREUDE BEIM RÄTSELN';
     ui.complete.classList.remove('solved');
     ui.hintArrow.textContent = '→';
@@ -185,7 +181,6 @@
     document.querySelectorAll('[data-level]').forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.level === level)));
     drawGrid();
     drawSolution();
-    updateCount();
     resizeCells();
     ui.scroll.scrollLeft = 0;
     showStatus('');
@@ -441,7 +436,6 @@
     persist();
     refreshSelection();
     refreshSolution();
-    updateCount();
     if (completed()) markComplete();
     else {
       ui.complete.textContent = 'VIEL FREUDE BEIM RÄTSELN';
@@ -463,12 +457,6 @@
     ui.complete.classList.add('solved');
     showStatus('Geschafft! Alle Begriffe und das Lösungswort sind richtig.', 'success');
   }
-  function updateCount() {
-    const total = game.model.cells.size;
-    const count = [...game.model.cells.keys()].filter((key) => !!game.letters[key]).length;
-    ui.count.textContent = `${count} / ${total}`;
-  }
-
   function resizeCells() {
     if (!game) return;
     const size = game.model.puzzle.size;
