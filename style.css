@@ -148,3 +148,151 @@ h1 span { color: #727a72; }
   .new-game-button { font-size: 9px; padding: 8px 5px; }
   .overline { font-size: 7px; }
 }
+
+
+/* Sudoku design system, shared visual language. */
+:root {
+  color-scheme: light;
+  --page:#f8f9fc; --bg:#f8f9fc; --ink:#18253c; --muted:#8993a5;
+  --accent:#2675eb; --accent-soft:#e6f0ff; --line:#d8dfea; --section-line:#566477;
+  --paper:#fff; --active:#e6f0ff; --active-line:#75aafa;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Helvetica Neue",Helvetica,Arial,sans-serif;
+  font-synthesis:none; -webkit-font-smoothing:antialiased;
+}
+html {min-width:280px; min-height:100%}
+body {background:#f8f9fc; color:#18253c; min-height:100svh; font-family:inherit}
+button:focus-visible,input:focus-visible,a:focus-visible {outline:3px solid #70a5ff;outline-offset:3px}
+.shell {width:min(calc(100% - 36px),975px);min-height:100svh;margin:0 auto;padding:max(24px,env(safe-area-inset-top)) 0 max(20px,env(safe-area-inset-bottom))}
+.masthead {display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:18px}
+.identity{min-width:0}
+h1 {font:750 clamp(31px,5vw,39px)/1.11 -apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif;letter-spacing:-.065em;margin:0}
+.brand-period {color:#2675eb}
+.header-actions {display:flex;align-items:center;gap:9px;position:relative;flex:none;padding:0}
+.new-button {min-height:39px;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 14px;background:#fff;border:1px solid #e3e8f0;border-radius:24px;box-shadow:0 3px 12px #16263c07;color:#293e5c;font-size:13px;font-weight:700;white-space:nowrap}
+.new-button svg{width:17px;height:17px}
+.new-button:active:not(:disabled){transform:scale(.97)}
+.new-button:disabled {opacity:.55}
+.menu-button{display:grid;place-items:center;width:39px;height:39px;padding:0;border:1px solid #e3e8f0;border-radius:50%;background:#fff;color:#5f7189;box-shadow:0 3px 12px #16263c07}
+.menu-button svg {width:21px;height:21px}
+.menu-button[aria-expanded="true"]{background:#e6f0ff;color:#2675eb}
+.menu-panel{position:absolute;top:calc(100% + 9px);right:0;z-index:80;width:min(310px,calc(100vw - 35px));max-height:min(72vh,530px);overflow-y:auto;border:1px solid #d8dfea;border-radius:18px;background:white;box-shadow:0 18px 45px #1020381c;padding:19px}
+.menu-panel h2 {margin:0 0 13px;font:750 16px/1.3 -apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif;letter-spacing:-.03em}
+.history-section{border-top:1px solid #e9edf4;border-bottom:1px solid #e9edf4;margin:0;padding:0}
+.history-section summary{cursor:pointer;padding:13px 2px;color:#526581;font-size:13px;font-weight:680}
+.history-list{overflow-y:auto;max-height:280px;padding-bottom:8px}
+.history-button{display:block;width:100%;text-align:left;border:0;border-bottom:1px solid #edf0f5;border-radius:8px;background:transparent;padding:11px 9px;color:#687b94;font-size:12px}
+.history-button:hover,.history-button[aria-current="true"]{background:#eaf2ff;color:#2267cb}
+.history-button[aria-current="true"]{font-weight:730}
+.menu-note{margin:14px 2px 0;color:#8996a9;font-size:11px;line-height:1.55}
+.levels{width:100%;height:43px;display:grid;grid-template-columns:repeat(3,1fr);gap:3px;padding:4px;margin-bottom:22px;border-radius:13px;background:#eaedf4}
+.level{border:0;border-radius:10px;background:transparent;color:#8591a1;font-size:13px;font-weight:680;transition:background .16s,color .16s,box-shadow .16s}
+.level[aria-pressed="true"]{background:white;color:#18243c;box-shadow:0 1px 4px #10203815}
+.level:not([aria-pressed="true"]):active{background:#dfe4ed}
+.game{display:flex;flex-direction:column;min-width:0}
+.game-info{display:flex;align-items:center;justify-content:space-between;min-height:27px;gap:8px;margin-bottom:13px}
+.game-label{display:flex;align-items:center;gap:9px;color:#8995a7;font-size:10px;font-weight:760;letter-spacing:.075em}
+#issueIndicator{color:#546681;font-size:inherit;letter-spacing:inherit;font-weight:inherit}
+#filledCount{font-variant-numeric:tabular-nums}
+.tiny-dot{width:3px;height:3px;background:#b4c0ce;border-radius:50%}
+.game-genre{color:#9aa5b5;font-size:10px;letter-spacing:.09em;font-weight:740}
+.puzzle-page{margin:0;padding:0;min-width:0;background:transparent;border:0;box-shadow:none}
+.puzzle-heading{display:block;margin:0 0 14px;padding:0;border:0}
+.eyebrow{color:#94a0b0;font-size:9px;font-weight:760;letter-spacing:.12em}
+.puzzle-heading h2{margin:4px 0 0;font:720 clamp(18px,3.4vw,24px)/1.25 -apple-system,BlinkMacSystemFont,"SF Pro Display",Arial,sans-serif;letter-spacing:-.04em}
+.active-hint{position:relative;display:grid;grid-template-columns:39px minmax(0,1fr) 45px;align-items:center;min-height:67px;background:#fff;border:1px solid #e3e9f2;border-radius:15px;box-shadow:0 3px 16px #25385108;padding:6px 8px 6px 13px}
+.hint-arrow{color:#2675eb;font-size:25px;font-weight:520;line-height:1}
+.hint-text{min-width:0;padding:0 7px 0 0}
+.hint-text small{display:block;color:#8995a7;font-size:9px;font-weight:760;letter-spacing:.095em}
+.hint-text strong{display:block;margin-top:3px;color:#293d5a;font-size:13px;font-weight:660;line-height:1.4}
+.next-button{height:42px;width:42px;display:grid;place-items:center;border:0;border-radius:11px;background:transparent;color:#7085a0;padding:0}
+.next-button svg{width:21px;height:21px}
+.next-button:active{background:#e6f0ff;color:#2675eb}
+.grid-area{padding:17px 0 0}
+.grid-scroll{width:100%;max-width:100%;overflow:auto;-webkit-overflow-scrolling:touch;touch-action:pan-x pan-y;overscroll-behavior-inline:contain;scrollbar-color:#c3cfdf transparent;scrollbar-width:thin;outline-offset:-3px;border-radius:5px}
+.puzzle-grid{background:#f4f6fb;border:2px solid #3d506a;border-radius:4px;overflow:hidden;box-shadow:0 10px 32px #263a560a,0 2px 5px #25385109}
+.tile{border-right:1px solid #d8dfea;border-bottom:1px solid #d8dfea}
+.tile.letter{background:#fff}
+.tile.clue{background:#eaf0f9}
+.tile.void{background:#e9edf5}
+.tile.void::after{border:1px solid #e1e7f1}
+.tile.letter.in-word{background:#e8f1ff}
+.tile.letter.active{background:#cee2ff;box-shadow:inset 0 0 0 2px #75aafa;z-index:3}
+.tile.letter.wrong{background:#fff0f0}
+.tile.letter.active.wrong{background:#ffdddd;box-shadow:inset 0 0 0 2px #ec8794}
+.tile.letter.given::after{background:#358a7b}
+.letter-input{color:#2475e8;font-weight:610;caret-color:#2675eb}
+.letter-input::selection{background:#d6e7ff}
+.solution-index{color:#61758f}
+.tile.clue.selected-clue{background:#cce0ff;box-shadow:inset 0 0 0 2px #87b3f3}
+.clue-target{color:#334660}
+.clue-target:hover{background:#dce9fa}
+.clue-copy{font-weight:650}
+.clue-direction{color:#527aad}
+.tile.clue.dual .clue-target:first-child{border-bottom-color:#c4d0e1}
+.grid-bottomnote{min-height:34px;padding-top:7px;color:#9aa5b5}
+.zoom-controls{gap:7px}
+.zoom-controls button{width:29px;height:29px;display:grid;place-items:center;background:#fff;border:1px solid #e3e8f0;border-radius:9px;color:#647996;font-size:17px}
+.zoom-controls button:active:not(:disabled){background:#e6f0ff;color:#2675eb}
+.zoom-controls span{min-width:37px}
+.tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px;margin:12px auto 22px;width:min(100%,510px)}
+.tool{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;min-height:58px;padding:2px 0;border:0;border-radius:12px;background:transparent;color:#66788f;font-size:11px;font-weight:640}
+.tool-icon{width:27px;height:27px;display:grid;place-items:center;color:#55708e}
+.tool-icon svg{width:23px;height:23px}
+.tool:active{background:#e9f1fe;color:#2675eb;transform:scale(.97)}
+.solution-section{padding-top:15px;border-top:1px solid #d8dfea}
+.solution-heading{margin-bottom:13px}
+.solution-heading strong{color:#566d89;font-size:10px;font-weight:780;letter-spacing:.12em}
+.solution-heading span{color:#93a1b3;font:400 11px/1.4 -apple-system,BlinkMacSystemFont,Arial,sans-serif}
+.solution-grid{gap:5px;width:max-content;padding:2px;border:0}
+.solution-tile{width:clamp(35px,4.2vw,47px);height:clamp(43px,4.9vw,54px);padding:3px 4px;border:1px solid #d8e0ed;border-radius:6px;background:#fff;color:#2475e8}
+.solution-tile:last-child{border-right:1px solid #d8e0ed}
+.solution-tile span{color:#9aa5b5}
+.solution-tile strong{font-size:20px;font-weight:650}
+.solution-tile:active{background:#e6f0ff}
+.paper-footer{margin-top:18px;padding-top:12px;border-top:0;color:#9ca8b8}
+.paper-footer .solved{color:#3e9c89}
+.status-message{min-height:17px;margin:14px 0 0;color:#9aa5b5;text-align:center;font-size:11px;line-height:1.5}
+.status-message.error{color:#dc6069}
+.status-message.success{color:#3e9c89}
+.game-footer{display:flex;justify-content:center;margin-top:7px;padding-bottom:3px}
+.brand-signature,.brand-signature:link,.brand-signature:visited,.brand-signature:hover,.brand-signature:active{color:#a1aab8;text-decoration:none;font-size:10px;font-weight:420;letter-spacing:.065em;line-height:1.4;white-space:nowrap}
+.brand-signature strong{font-weight:780}
+@media (min-width:620px){
+.shell{padding-top:42px}
+.masthead{margin-bottom:25px}
+.levels{margin-bottom:25px}
+.puzzle-heading{margin-bottom:17px}
+.grid-area{padding-top:20px}
+.tools{margin-top:19px;margin-bottom:28px}
+}
+@media (max-width:619px){
+.shell{width:calc(100% - 28px);padding-top:max(15px,env(safe-area-inset-top))}
+.masthead{margin-bottom:14px}
+h1{font-size:clamp(25px,7.1vw,34px)}
+.header-actions{gap:6px}
+.new-button{padding:9px 11px;min-height:36px;font-size:12px}
+.menu-button{width:36px;height:36px}
+.levels{height:40px;margin-bottom:15px}
+.game-info{min-height:22px;margin-bottom:8px}
+.game-genre{display:none}
+.puzzle-heading{margin-bottom:10px}
+.puzzle-heading h2{font-size:19px}
+.active-hint{min-height:62px;grid-template-columns:32px minmax(0,1fr) 38px;padding-left:11px}
+.hint-arrow{font-size:23px}
+.hint-text strong{font-size:12px}
+.hint-text small{font-size:8px}
+.next-button{width:36px;height:40px}
+.grid-area{padding-top:12px}
+.tools{margin:8px auto 13px}
+.tool{min-height:54px}
+.solution-heading{display:block}
+.solution-heading span{display:block;margin-top:5px;text-align:left}
+.solution-tile{width:37px;height:45px}
+.solution-tile strong{font-size:19px}
+.paper-footer{flex-wrap:wrap}
+}
+@media (max-width:350px){
+h1{font-size:24px}
+.new-button{padding:8px 9px}
+.menu-button{width:34px;height:34px}
+}
