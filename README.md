@@ -1,62 +1,57 @@
-# Kreuzworträtsel – Die Rätselstunde
+# Die Rätselseite – Schwedenrätsel
 
-Eine kleine, vollständig clientseitige Kreuzworträtsel-Webapp auf Deutsch. Klassisches Zeitschriften-Design, für **iPhone, iPad und Desktop** optimiert. Keine Frameworks, kein Backend und keine Anmeldung.
+Eine neu aufgebaute, statische Schwedenrätsel-Webapp für iPhone, iPad und Desktop – wie eine Rätselseite aus der Zeitung. Hinweise und Pfeile stehen **direkt in den grauen Rasterfeldern**, nicht in einer separaten Hinweisliste.
 
-## Funktionen
+## Spielen
 
-- Drei Schwierigkeitsgrade: Leicht, Mittel, Schwer
-- Zum Start jeweils ein spielbares Rätsel pro Schwierigkeitsgrad
-- Kreuzendes Buchstabenraster mit nummerierten Hinweisen (waagerecht/senkrecht)
-- Bedienung durch Tippen, Bildschirmtastatur und Hardware-Tastatur
-- Feld erneut antippen oder Leertaste: an Kreuzungen Richtung wechseln
-- Pfeiltasten: im Raster navigieren; Enter: nächster Hinweis; Rücktaste: Buchstaben löschen
-- Buchstabenprüfung, ein Buchstabe als Hilfe und Rätsel zurücksetzen
-- Automatische lokale Speicherung des Fortschritts **je Rätsel** im Browser (localStorage)
-- Kein Server, keine Cookies und keine Benutzerkonten
+- Weißes Feld antippen: Buchstabe eingeben. An Kreuzungen erneut tippen, um die Richtung zu wechseln.
+- Graues Hinweisfeld antippen: passenden Begriff auswählen.
+- Der ganze Begriff wird markiert; der vollständige Hinweis steht zusätzlich über dem Raster.
+- Die kleinen Nummern in Buchstabenfeldern verweisen auf das **Lösungswort** am Seitenende. Dieses füllt sich von selbst.
+- Auf dem iPhone das Raster **seitlich verschieben**, damit die kleinen Hinweistexte lesbar bleiben. Mit **−** und **+** lässt sich die Größe zusätzlich verändern.
+- Über das unauffällige **•••**-Menü oben rechts zwischen Leicht, Mittel und Schwer wechseln, Einträge prüfen, einen Buchstaben aufdecken oder ein Rätsel zurücksetzen.
+- Fortschritt wird je Rätsel im Browser (`localStorage`) gespeichert. Keine Anmeldung, kein Backend.
 
-## GitHub Pages
+## Bereitgestellte Rätsel
 
-1. Repository unter **Settings → Pages** öffnen.
-2. Unter **Build and deployment** die Quelle **Deploy from a branch** wählen.
-3. Branch **main** und Ordner **/(root)** auswählen, danach speichern.
-4. Die öffentliche Projekt-URL lautet nach erfolgreicher Veröffentlichung normalerweise:
-   https://bilgery-solutions.github.io/kreuzwortraetsel/
-
-**Hinweis:** Das Repository wurde als **privat** angelegt. Für GitHub Pages aus privaten Repositorys benötigt die Organisation einen entsprechenden kostenpflichtigen GitHub-Plan. Bei GitHub Free for Organizations muss das Repository zur Veröffentlichung öffentlich sein. Ein privat gespeichertes Repository bedeutet zudem nicht automatisch, dass die veröffentlichte Website privat ist.
+| Schwierigkeitsgrad | Ausgabe | Begriffe | Raster |
+| --- | --- | ---: | --- |
+| Leicht | 01 | 39 | 16 × 16 |
+| Mittel | 01 | 40 | 16 × 16 |
+| Schwer | 01 | 39 | 17 × 17 |
 
 ## Aufbau
 
-| Datei | Zweck |
-|---|---|
-| `index.html` | Struktur und Benutzeroberfläche |
-| `styles.css` | Layout für Smartphone, Tablet und Desktop |
-| `app.js` | Spiellogik, Eingabe, Navigation, Speicherung |
-| `puzzles.js` | Rätseldaten – ohne Änderung der Spiellogik erweiterbar |
-| `favicon.svg` | Kleines Raster-Symbol |
+- `index.html`: komplette Oberfläche
+- `style.css`: klassischer Magazin-/Zeitungsstil und responsives Layout
+- `main.js`: Spiellogik, Eingabe, Prüfung, Zoom und Speicherung
+- `raetsel.js`: Rätseldaten mit Hinweis-, Buchstaben- und Lösungsfeldern
+- `favicon.svg`: Pfeilrätsel-Icon
 
-## Neue Rätsel hinzufügen
+Die frühere Kreuzworträtsel-App wurde **vollständig ersetzt**. Keine ihrer Spiellogik-Dateien wird mehr benötigt.
 
-In `puzzles.js` ein weiteres Objekt in `window.CROSSWORD_PUZZLES` ergänzen:
+### Weitere Ausgaben ergänzen
+
+Ein weiteres Objekt in `window.SCHWEDENRAETSEL` in `raetsel.js` ergänzen, mit einzigartiger `id`, `level` (`leicht`, `mittel` oder `schwer`), `title`, `size`, `number`, `entries` und `solution`. Jedes Rätselwort enthält:
 
 ```javascript
 {
-  id: "mittel-002",
-  difficulty: "mittel",
-  number: "02",
-  title: "Neues Rätsel",
-  description: "Ein kurzer Einführungstext.",
-  size: 11,
-  entries: [
-    // ["LOESUNG", "Deutscher Hinweis", zeile, spalte, "across" oder "down"]
-    ["BAUM", "Hat Stamm und Krone", 0, 0, "across"]
-  ]
+  answer: "KATZE",        // Großbuchstaben, Umlaute AE/OE/UE
+  clue: "Schnurrendes Tier",
+  row: 4, col: 3,         // Buchstabenstart (nullbasiert)
+  direction: "right",    // "right" oder "down"
+  clueRow: 4, clueCol: 2  // Graues Hinweisfeld direkt links bzw. darüber
 }
 ```
 
-Koordinaten beginnen bei **0**. Die Antworten müssen sich an Kreuzungspunkten denselben Buchstaben teilen. Die Webapp validiert widersprüchliche Kreuzungen beim Laden.
+Die `solution` enthält ein `answer` und ein `cells`-Array mit `[zeile, spalte]` für jeden Buchstaben des Lösungsworts (jeweils ein eindeutiges Buchstabenfeld). Die App prüft beim Laden sämtliche Kreuzungen und die Lösungsfelder. Mehrere Ausgaben pro Stufe sind im Datenmodell möglich; derzeit zeigt die UI die erste Ausgabe pro Stufe.
 
-**Ausblick:** Für mehrere Rätsel pro Schwierigkeitsgrad ist das Datenmodell bereits vorbereitet (jede Ausgabe hat eine eigene ID und einen eigenen Speicherstand). Derzeit wählt die Oberfläche das erste Rätsel je Schwierigkeitsgrad. Im nächsten Schritt kann eine zusätzliche Rätselauswahl ergänzt werden.
+## Hosting auf GitHub Pages
 
-## Lokal testen
+`Settings → Pages → Build and deployment → Deploy from a branch → main → /(root)`.
 
-Die `index.html` direkt im Browser öffnen. Alle JavaScript- und CSS-Dateien werden über relative Pfade geladen und benötigen keinen Build-Schritt.
+Projekt-URL nach Aktivierung: <https://bilgery-solutions.github.io/kreuzwortraetsel/>.
+
+Das Repository ist derzeit privat. Für GitHub Pages aus einem privaten Organisations-Repository ist ein geeigneter GitHub-Plan nötig; andernfalls kann es für eine öffentliche GitHub-Pages-Seite öffentlich gestellt werden. Die veröffentlichte Seite ist öffentlich zugänglich, auch wenn das Repository privat sein kann.
+
+Es gibt keinen Build-Schritt und keine externen Laufzeitabhängigkeiten. Für lokale Tests `index.html` öffnen oder einen einfachen statischen Webserver nutzen.
